@@ -109,36 +109,63 @@
         </div>
     </section>
 
-    <!-- Use Cases Section (Replaced Updates) -->
+    <!-- Use Cases Section -->
     <section id="use-cases" style="padding: 100px 0;">
         <div class="container">
             <h2 style="text-transform: uppercase; font-size: 3rem; text-align: center; margin-bottom: 60px; font-weight: 900;">CÁC GIẢI PHÁP ĐIỂN HÌNH</h2>
-            <div class="feature-grid">
-                <!-- UC1 -->
-                <div class="feature-card" style="padding: 0; text-align: left; background: #fff; border: 1px solid #eee;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                <!-- UC1: EHR -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
                     <img src="assets/Hieu An photo-018.jpg" style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 30px;">
-                        <span style="background: var(--secondary); padding: 4px 10px; font-weight: bold; font-size: 0.75rem;">SỐ HÓA</span>
-                        <h3 style="font-size: 1.3rem; margin: 15px 0;">Khởi tạo hồ sơ EHR</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Quét mã QR từ VNeID để tự động tạo hồ sơ bệnh án, lưu trữ tiền sử bệnh và dữ liệu BHYT tập trung.</p>
+                    <div style="padding: 25px;">
+                        <span style="background: #e0f2f1; color: #00897b; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">SỐ HÓA</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Hồ sơ VNeID-EHR</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Tự động khởi tạo bệnh án điện tử từ mã QR VNeID, lưu trữ lịch sử bệnh lý tập trung.</p>
                     </div>
                 </div>
-                <!-- UC2 -->
-                <div class="feature-card" style="padding: 0; text-align: left; background: #fff; border: 1px solid #eee;">
+                <!-- UC2: Alerts -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
                     <img src="assets/Hieu An photo-004.jpg" style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 30px;">
-                        <span style="background: var(--secondary); padding: 4px 10px; font-weight: bold; font-size: 0.75rem;">THEO DÕI</span>
-                        <h3 style="font-size: 1.3rem; margin: 15px 0;">Cảnh báo chỉ số đỏ</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Hệ thống tự động phát hiện và gửi cảnh báo khẩn cấp đến người nhà khi chỉ số huyết áp hoặc đường huyết đo được vượt ngưỡng an toàn.</p>
+                    <div style="padding: 25px;">
+                        <span style="background: #ffebee; color: #d32f2f; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">GIÁM SÁT</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Cảnh báo khẩn cấp</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Tự động gửi thông báo đỏ khi phát hiện chỉ số huyết áp, đường huyết vượt ngưỡng an toàn.</p>
                     </div>
                 </div>
-                <!-- UC3 -->
-                <div class="feature-card" style="padding: 0; text-align: left; background: #fff; border: 1px solid #eee;">
+                <!-- UC3: Telemedicine -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
                     <img src="assets/Hieu An photo-006.jpg" style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 30px;">
-                        <span style="background: var(--secondary); padding: 4px 10px; font-weight: bold; font-size: 0.75rem;">LIÊN THÔNG</span>
-                        <h3 style="font-size: 1.3rem; margin: 15px 0;">Kết nối trạm y tế</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Dữ liệu sức khỏe hàng ngày được liên thông trực tiếp với bác sĩ tại trạm y tế xã, hỗ trợ chuyển tuyến kịp thời, chính xác.</p>
+                    <div style="padding: 25px;">
+                        <span style="background: #e1f5fe; color: #0288d1; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">KẾT NỐI</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Tư vấn từ xa</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Liên thông trực tiếp với bác sĩ Trạm y tế xã qua ứng dụng, hỗ trợ tư vấn và kê đơn kịp thời.</p>
+                    </div>
+                </div>
+                <!-- UC4: Nutrition -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="assets/Hieu An photo-014.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div style="padding: 25px;">
+                        <span style="background: #fff9c4; color: #fbc02d; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">DINH DƯỠNG</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Thực đơn cá nhân</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Thiết lập chế độ ăn uống chuyên biệt dựa trên tình trạng bệnh nền (Tiểu đường, Gout...).</p>
+                    </div>
+                </div>
+                <!-- UC5: Exercise -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="assets/Hieu An photo-007.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div style="padding: 25px;">
+                        <span style="background: #f1f8e9; color: #689f38; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">DƯỠNG SINH</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Phòng chống té ngã</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Các bài tập vận động nhẹ nhàng giúp phục hồi chức năng và giữ thăng bằng hiệu quả.</p>
+                    </div>
+                </div>
+                <!-- UC6: Community -->
+                <div style="background: #fff; border: 1px solid #eee; border-radius: 16px; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="assets/Hieu An photo-003.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div style="padding: 25px;">
+                        <span style="background: #f3e5f5; color: #8e24aa; padding: 4px 10px; font-weight: bold; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase;">CỘNG ĐỒNG</span>
+                        <h3 style="font-size: 1.2rem; margin: 15px 0; font-weight: 800;">Xóa bỏ cô đơn</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">Tạo mạng lưới gắn kết người cao tuổi thông qua các câu lạc bộ văn hóa tại nhà văn hóa.</p>
                     </div>
                 </div>
             </div>

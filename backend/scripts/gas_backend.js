@@ -17,10 +17,12 @@ function doGet(e) {
     switch (action) {
       case 'getElders':
         return listElders();
+      case 'getElderDetail':
+        return getElderDetail(e.parameter.id);
       case 'getVitalLogs':
         return getVitalLogs(e.parameter.id);
       default:
-        return response({ status: 'success', message: 'Health Node API is Online' });
+        return response({ status: 'success', message: 'Health Node API is Online', timestamp: new Date() });
     }
   } catch (err) {
     return response({ status: 'error', message: err.toString() });
@@ -100,17 +102,51 @@ function addVitalLog(payload) {
 function listElders() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName('Elders');
-  if (!sheet) return response({ status: 'success', data: [] });
+  if (!sheet || sheet.getLastRow() < 2) return response({ status: 'success', data: [] });
   
   const data = sheet.getDataRange().getValues();
   const headers = data.shift();
   const result = data.map(row => {
     let obj = {};
-    headers.forEach((h, i) => obj[h] = row[i]);
+    headers.forEach((h, i) => obj[h.toString().trim()] = row[i]);
     return obj;
   });
   
   return response({ status: 'success', data: result });
+}
+
+function getElderDetail(id) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const elderSheet = ss.getSheetByName('Elders');
+  const logSheet = ss.getSheetByName('VitalLogs');
+  
+  if (!elderSheet) return response({ status: 'error', message: 'Sheet Elders not found' });
+  
+  const elderData = elderSheet.getDataRange().getValues();
+  const headers = elderData.shift();
+  const elderRow = elderData.find(row => row[0].toString() === id.toString());
+  
+  if (!elderRow) return response({ status: 'error', message: 'Elder not found' });
+  
+  let elderObj = {};
+  headers.forEach((h, i) => elderObj[h.toString().trim()] = elderRow[i]);
+  
+  // Get Logs
+  let logs = [];
+  if (logSheet && logSheet.getLastRow() > 1) {
+    const allLogs = logSheet.getDataRange().getValues();
+    const logHeaders = allLogs.shift();
+    logs = allLogs
+      .filter(row => row[1].toString() === id.toString())
+      .map(row => {
+        let lObj = {};
+        logHeaders.forEach((h, i) => lObj[h.toString().trim()] = row[i]);
+        return lObj;
+      })
+      .reverse(); // Newest first
+  }
+  
+  return response({ status: 'success', data: { info: elderObj, logs: logs } });
 }
 
 /**

@@ -127,13 +127,15 @@ nav {
     text-align: center;
     color: var(--white);
     position: relative;
-    padding-top: 60px;
+    padding-top: 100px; /* Thêm khoảng trống lớn dưới header */
 }
 
 .hero-content {
     max-width: 1000px;
-    margin-bottom: 50px;
+    margin-top: 50px; /* Thêm margin cho nội dung */
+    margin-bottom: 80px;
 }
+
 
 .hero-content h1 {
     font-size: 6rem;

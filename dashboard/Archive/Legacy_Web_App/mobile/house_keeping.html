@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="vi" x-data="housekeepingApp()">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCP-HMIS Mobile | Quản lý Vận hành</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scp: {
+                            active: '#065f46', // Xanh Emerald đậm cho Card
+                            primary: '#10b981',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+
+        function housekeepingApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                tab: 'home',
+                staffList: ['Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Phạm Minh D', 'Hoàng Thị E'],
+                locationList: ['Phòng Lab 01', 'Phòng Mổ 02', 'Sảnh Chính', 'Khoa Cấp Cứu', 'Phòng Họp', 'Khu Vệ Sinh', 'Hành lang T1'],
+                staffName: urlParams.get('staff') || localStorage.getItem('scp_staff_name') || '',
+                location: urlParams.get('loc') || '',
+                photo: null,
+                status: 'CHƯA HOÀN THÀNH',
+                showScanner: false,
+                showPinModal: false,
+                pinInput: '',
+                tempLocation: '',
+                tempPin: urlParams.get('pin') || '',
+                secondsLeft: 3 * 60 * 60,
+                nextLocations: [],
+                qrData: [],
+
+                // Training Data
+                trainingURL: 'https://script.google.com/macros/s/AKfycbyUSAnrbYjUJqKycGASqHcYH9TIrh3RgdBRnsXYhqvteThj6Lssm_mzV17KSbVOvBhV2Q/exec',
+                courses: [],
+                loadingTraining: false,
+                submitting: false,
+                showQuiz: false,
+                quizSession: { active: false, currentIndex: 0, correctCount: 0, questions: [], showResult: false },
+
+                async init() {
+                    this.startTimer();
+                    this.fetchQRData();
+                    this.fetchSchedule();
+                    this.fetchCourses();
+
+                    // NATIVE QR OPTIMIZATION: If URL has loc=..., handle it automatically
+                    if (this.location) {
+                        this.tempLocation = this.location;
+                        // Don't reset location yet, keep it for display but status is pending
+                        this.status = 'ĐANG XÁC THỰC...';
+                        if (this.tempPin) {
+                            this.pinInput = this.tempPin;
+                            this.verifyPin();
+                        } else {
+                            this.showPinModal = true;
+                        }
+                    }
+
+                    this.$watch('staffName', val => localStorage.setItem('scp_staff_name', val));
+                },
+
+                async fetchQRData() {
+                    const SHEET_ID = '1_aMJkXZxN49COn9p2a64yNCtegPF1mlhL4M66q9JGfU';
+                    const API_KEY = 'AIzaSyArA7XDisEHeSB3aiac7gv5F9KahiAZ0sU';
+                    try {
+                        const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/QR_Code!A2:C100?key=${API_KEY}`);
+                        const data = await res.json();
+                        if (data.values) {
+                            this.qrData = data.values.map(row => ({ name: row[0], link: row[1], pin: row[2] }));
+                        }
+                    } catch (e) { console.error('Lỗi tải dữ liệu QR:', e); }
+                },
+
+                async fetchSchedule() {
+                    const SHEET_ID = '1_aMJkXZxN49COn9p2a64yNCtegPF1mlhL4M66q9JGfU';
+                    const API_KEY = 'AIzaSyArA7XDisEHeSB3aiac7gv5F9KahiAZ0sU';
+                    try {
+                        // Assuming Schedule is in a sheet named 'Schedule' or 'Sheet1'
+                        const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:G100?key=${API_KEY}`);
+                        const data = await res.json();
+                        if (data.values) {
+                            // Map last 5 entries or filter today's tasks
+                            this.nextLocations = data.values.slice(-5).map(row => ({
+                                id: row[0] || 'ID',
+                                loc: row[2] || 'Vị trí',
+                                when: row[0] || '12:00', // Time
+                                what: 'Vệ sinh định kỳ',
+                                done: row[4] === 'Vệ sinh hoàn tất'
+                            })).reverse();
+                        }
+                    } catch (e) { }
+                },
+
+                async fetchCourses() {
+                    this.loadingTraining = true;
+                    try {
+                        const res = await fetch(this.trainingURL);
+                        this.courses = await res.json();
+                    } catch (e) { console.error('Lỗi tải khóa học:', e); }
+                    this.loadingTraining = false;
+                },
+
+                startQuiz() {
+                    if (this.courses.length === 0) return alert('Chưa có câu hỏi đào tạo.');
+                    this.quizSession = {
+                        active: true,
+                        currentIndex: 0,
+                        correctCount: 0,
+                        questions: [...this.courses].sort(() => 0.5 - Math.random()).slice(0, 5),
+                        showResult: false
+                    };
+                    this.showQuiz = true;
+                },
+
+                submitAnswer(choice) {
+                    const q = this.quizSession.questions[this.quizSession.currentIndex];
+                    if (choice === q.Correct_Answer) {
+                        this.quizSession.correctCount++;
+                    }
+
+                    if (this.quizSession.currentIndex < this.quizSession.questions.length - 1) {
+                        this.quizSession.currentIndex++;
+                    } else {
+                        // Show result screen instead of alert
+                        this.quizSession.showResult = true;
+                    }
+                },
+
+                startTimer() { setInterval(() => { if (this.secondsLeft > 0) this.secondsLeft--; }, 1000); },
+                formatTime() {
+                    const h = Math.floor(this.secondsLeft / 3600);
+                    const m = Math.floor((this.secondsLeft % 3600) / 60);
+                    const s = this.secondsLeft % 60;
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                },
+
+                takePhoto() {
+                    const input = document.createElement('input');
+                    input.type = 'file'; input.accept = 'image/*'; input.capture = 'environment';
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (f) => {
+                                const img = new Image();
+                                img.src = f.target.result;
+                                img.onload = () => {
+                                    const canvas = document.createElement('canvas');
+                                    const ctx = canvas.getContext('2d');
+                                    const scale = 800 / img.width;
+                                    canvas.width = 800; canvas.height = img.height * scale;
+                                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                    this.photo = canvas.toDataURL('image/jpeg', 0.7);
+                                };
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                    input.click();
+                },
+
+                canSubmit() { return this.staffName && this.location && this.photo && this.location !== '---'; },
+
+                async submitToGAS(type, detail = '') {
+                    if (!this.canSubmit() && type === 'success') {
+                        alert('⚠️ Yêu cầu đủ: Tên + Vị trí + Ảnh chụp hiện trường!');
+                        return;
+                    }
+
+                    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyOtUQYPTzDWMzU_QK021ckJyDbt-lRLac7x1cwX0U6e3mcwLor4PC4LKxvJp5s0lzR/exec';
+                    this.status = 'ĐANG GỬI...';
+                    this.submitting = true;
+
+                    const payload = {
+                        staff: this.staffName,
+                        location: this.location,
+                        image: this.photo,
+                        type: type,
+                        detail: detail
+                    };
+
+                    try {
+                        await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                        alert('✅ Báo cáo thành công!');
+                        this.status = 'ĐÃ HOÀN THÀNH';
+                        this.photo = null;
+                        this.fetchSchedule(); // Refresh schedule
+                    } catch (e) {
+                        alert('❌ Lỗi: ' + e.message);
+                        this.status = 'LỖI GỬI';
+                    } finally {
+                        this.submitting = false;
+                    }
+                },
+
+                startScan() {
+                    this.showScanner = true;
+                    const html5QrCode = new Html5Qrcode("reader");
+                    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, async (text) => {
+                        try { await html5QrCode.stop(); html5QrCode.clear(); } catch (e) { }
+                        this.showScanner = false;
+
+                        const matched = this.qrData.find(item => item.link.trim() === text.trim() || item.name.trim() === text.trim());
+                        if (matched) {
+                            this.tempLocation = matched.name;
+                            this.tempPin = matched.pin;
+                        } else {
+                            this.tempLocation = text;
+                            this.tempPin = '8888';
+                        }
+                        this.pinInput = '';
+                        this.showPinModal = true;
+                    });
+                },
+
+                verifyPin() {
+                    const validPins = [this.tempPin && this.tempPin.toString(), '2026', '8888'];
+                    if (validPins.includes(this.pinInput)) {
+                        this.location = this.tempLocation;
+                        this.showPinModal = false;
+                        this.status = 'ĐÃ XÁC THỰC';
+                    } else {
+                        alert('❌ PIN sai!');
+                        this.pinInput = '';
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100" oncontextmenu="return false;">
+    <div class="app-container relative shadow-2xl overflow-hidden">
+
+        <header
+            class="p-6 pt-10 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur-md z-40 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-hospital-user"></i>
+                </div>
+                <div>
+                    <h2 class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                        x-text="location ? 'Đang tại: ' + location : 'Chưa quét mã vị trí'"></h2>
+                    <h1 class="text-sm font-black text-slate-900" x-text="staffName || 'Hãy xác thực danh tính'"></h1>
+                </div>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><i
+                    class="fas fa-shield-alt text-xs"></i></div>
+        </header>
+
+        <div class="app-content p-5 space-y-6 pb-28">
+
+            <!-- HOME TAB -->
+            <div x-show="tab === 'home'" class="space-y-6 animate-fade-in">
+                <section class="space-y-3">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">1. Xác thực
+                        nhân viên</label>
+                    <select x-model="staffName"
+                        class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold outline-none shadow-sm transition-all focus:border-emerald-500">
+                        <option value="" disabled selected>-- Chọn tên của bạn --</option>
+                        <template x-for="name in staffList">
+                            <option :value="name" x-text="name"></option>
+                        </template>
+                    </select>
+                </section>
+
+                <section class="space-y-3">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">2. Ảnh chụp
+                        hiện trường</label>
+                    <div @click="takePhoto()"
+                        class="w-full h-40 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center bg-slate-50 overflow-hidden relative active:scale-95 transition-all">
+                        <template x-if="!photo">
+                            <div class="text-center">
+                                <i class="fas fa-camera text-2xl text-slate-300 mb-2"></i>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Chạm để chụp ảnh bằng chứng
+                                </p>
+                            </div>
+                        </template>
+                        <template x-if="photo">
+                            <img :src="photo" class="w-full h-full object-cover">
+                        </template>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="p-[1px] rounded-[2.5rem] bg-emerald-200 shadow-xl overflow-hidden">
+                        <div class="p-6 rounded-[2.4rem] bg-scp-active space-y-5 text-white relative">
+                            <div class="flex justify-between items-center">
+                                <span
+                                    class="px-3 py-1 rounded-full bg-white/20 text-[9px] font-black uppercase tracking-tighter">Báo
+                                    cáo Vệ sinh</span>
+                                <span class="text-[14px] font-mono font-black text-emerald-300"
+                                    x-text="formatTime()"></span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-y-4 text-[11px]">
+                                <div>
+                                    <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Vị trí</p>
+                                    <p class="font-black" x-text="location || 'Quét mã để nhận vị trí'"></p>
+                                </div>
+                                <div>
+                                    <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Tình trạng</p>
+                                    <p class="font-black" x-text="status"></p>
+                                </div>
+                                <div>
+                                    <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Làm gì</p>
+                                    <p class="font-black text-white">Vệ sinh định kỳ</p>
+                                </div>
+                                <div>
+                                    <p class="text-emerald-300/60 font-bold uppercase text-[8px] mb-0.5">Quy trình</p>
+                                    <p class="font-black text-white">Chuẩn SCP Medical</p>
+                                </div>
+                            </div>
+                            <button @click="submitToGAS('success')" :disabled="!canSubmit() || submitting"
+                                class="w-full py-4 rounded-2xl font-black uppercase text-xs shadow-lg transition-all flex items-center justify-center gap-2"
+                                :class="canSubmit() ? 'bg-white text-emerald-900 active:scale-95' : 'bg-emerald-800/50 text-emerald-400/50 cursor-not-allowed border border-emerald-700'">
+                                <span x-show="!submitting" class="flex items-center gap-2">
+                                    <i class="fas fa-check-circle"></i> Xác nhận hoàn thành
+                                </span>
+                                <span x-show="submitting" class="flex items-center gap-2">
+                                    <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+                                </span>
+                            </button>
+                            <i class="fas fa-soap absolute -right-6 -bottom-6 text-9xl text-white/5 rotate-12"></i>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3
+                        class="text-[10px] font-black uppercase opacity-40 tracking-widest flex items-center gap-2 px-1">
+                        <i class="fas fa-calendar-alt"></i> Lịch nhắc vệ sinh tiếp theo
+                    </h3>
+                    <div class="space-y-3">
+                        <template x-for="next in nextLocations" :key="next.id">
+                            <div class="p-4 rounded-2xl border bg-white shadow-sm flex gap-4 items-center transition-all"
+                                :class="next.done ? 'opacity-40 grayscale' : 'border-emerald-100'">
+                                <div class="w-11 h-11 rounded-full flex items-center justify-center font-black text-[10px]"
+                                    :class="next.done ? 'bg-slate-100 text-slate-400' : 'bg-emerald-50 text-emerald-600'"
+                                    x-text="next.when"></div>
+                                <div class="flex-1">
+                                    <h4 class="text-[11px] font-black text-slate-700 mb-1" x-text="next.loc"></h4>
+                                    <div class="flex gap-3 text-[8px] font-bold uppercase tracking-tighter"
+                                        :class="next.done ? 'text-slate-400' : 'text-slate-500'">
+                                        <span class="flex items-center gap-1 font-black"
+                                            :class="next.done ? 'text-emerald-500' : 'text-orange-400'"><i class="fas"
+                                                :class="next.done ? 'fa-check' : 'fa-hourglass-start'"></i> <span
+                                                x-text="next.done ? 'HOÀN TẤT' : 'CHỜ DỌN'"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TRAINING TAB -->
+            <div x-show="tab === 'training'" class="space-y-6 animate-fade-in">
+                <div class="bg-green-600 p-6 rounded-3xl text-white shadow-lg relative overflow-hidden">
+                    <h3 class="text-xl font-black mb-1">Thư viện Đào tạo</h3>
+                    <p class="text-[10px] opacity-70 uppercase font-black">SCP Training System</p>
+                    <i class="fas fa-graduation-cap absolute -right-4 -bottom-4 text-8xl text-white/10 rotate-12"></i>
+                </div>
+
+                <div x-show="loadingTraining" class="flex flex-col items-center py-10">
+                    <div
+                        class="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4">
+                    </div>
+                    <p class="text-xs font-bold text-slate-400 uppercase">Đang tải kiến thức...</p>
+                </div>
+
+                <div x-show="!loadingTraining" class="space-y-4">
+                    <button @click="startQuiz()"
+                        class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-play"></i> Bắt đầu bài kiểm tra
+                    </button>
+
+                    <div class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm text-center">
+                        <i class="fas fa-book-reader text-3xl text-emerald-500/20 mb-3"></i>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase leading-relaxed">Bộ câu hỏi đã được
+                            tải. Hãy nhấn nút trên để bắt đầu thi sát hạch định kỳ.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <nav
+            class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[450px] h-[85px] flex justify-around items-center border-t bg-white/95 backdrop-blur-md z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+            <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'home' ? 'text-emerald-600' : 'text-slate-400'"><i
+                    class="fas fa-clipboard-list text-xl"></i><span class="text-[8px] font-bold uppercase">Nhiệm
+                    vụ</span></button>
+            <div class="relative -top-5"><button @click="startScan()"
+                    class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-xl border-4 border-white active:scale-90 transition-all border-emerald-100"><i
+                        class="fas fa-qrcode text-2xl"></i></button></div>
+            <button @click="tab = 'training'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'training' ? 'text-emerald-600' : 'text-slate-400'"><i
+                    class="fas fa-graduation-cap text-xl"></i><span class="text-[8px] font-bold uppercase">Đào
+                    tạo</span></button>
+        </nav>
+    </div>
+
+    <div x-show="showScanner" x-cloak class="fixed inset-0 z-[100] bg-black flex flex-col">
+        <div class="p-6 text-white flex justify-between items-center border-b border-white/10"><span
+                class="font-bold">QUÉT MÃ VỊ TRÍ PHÒNG</span><button @click="showScanner = false"
+                class="text-3xl">&times;</button></div>
+        <div id="reader" class="flex-1"></div>
+        <div class="p-8 text-white/60 text-center text-[10px] uppercase font-bold tracking-widest">Đưa mã QR vào khung
+            ngắm</div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div x-show="showQuiz" x-cloak
+        class="fixed inset-0 z-[120] bg-black/80 flex items-center justify-center p-6 backdrop-blur-md">
+
+        <!-- Question View -->
+        <div x-show="!quizSession.showResult"
+            class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-fade-in">
+            <div class="mb-4 flex justify-between items-center text-[10px] font-black text-emerald-600 uppercase">
+                <span x-text="'Câu ' + (quizSession.currentIndex+1) + '/' + quizSession.questions.length"></span>
+                <span x-text="quizSession.questions[quizSession.currentIndex]?.Category"></span>
+            </div>
+            <h4 class="text-sm font-black text-slate-800 mb-6 text-center leading-tight"
+                x-text="quizSession.questions[quizSession.currentIndex]?.Question_Text"></h4>
+            <div class="space-y-3">
+                <button @click="submitAnswer('A')"
+                    class="w-full p-4 border-2 border-slate-100 rounded-2xl text-left text-xs font-bold hover:bg-emerald-50 active:scale-95 transition-all flex justify-between items-center">
+                    <span x-text="'A. ' + quizSession.questions[quizSession.currentIndex]?.Option_A"></span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-20"></i>
+                </button>
+                <button @click="submitAnswer('B')"
+                    class="w-full p-4 border-2 border-slate-100 rounded-2xl text-left text-xs font-bold hover:bg-emerald-50 active:scale-95 transition-all flex justify-between items-center">
+                    <span x-text="'B. ' + quizSession.questions[quizSession.currentIndex]?.Option_B"></span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-20"></i>
+                </button>
+                <button @click="submitAnswer('C')" x-show="quizSession.questions[quizSession.currentIndex]?.Option_C"
+                    class="w-full p-4 border-2 border-slate-100 rounded-2xl text-left text-xs font-bold hover:bg-emerald-50 active:scale-95 transition-all flex justify-between items-center">
+                    <span x-text="'C. ' + quizSession.questions[quizSession.currentIndex]?.Option_C"></span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-20"></i>
+                </button>
+            </div>
+            <button @click="showQuiz = false"
+                class="w-full mt-6 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">Hủy bài
+                thi</button>
+        </div>
+
+        <!-- Result View -->
+        <div x-show="quizSession.showResult"
+            class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl text-center animate-bounce-in">
+            <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-trophy text-4xl text-emerald-600"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 uppercase mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-xs font-bold text-slate-400 uppercase mb-6">Kết quả đạt được</p>
+
+            <div class="text-5xl font-black text-emerald-600 mb-8"
+                x-text="quizSession.correctCount + '/' + quizSession.questions.length"></div>
+
+            <p class="text-[10px] font-bold text-slate-500 mb-8 px-4 leading-relaxed">Cảm ơn bạn đã tham gia đào tạo.
+                Kết quả sẽ được ghi nhận vào hồ sơ nhân sự.</p>
+
+            <button @click="showQuiz = false"
+                class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">
+                Đóng & Quay lại
+            </button>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div x-show="showPinModal" x-cloak
+        class="fixed inset-0 z-[110] bg-black/95 flex flex-col justify-center items-center p-6 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <div class="text-center mb-6">
+                <div
+                    class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                    <i class="fas fa-lock text-3xl"></i>
+                </div>
+                <h3 class="text-lg font-black text-slate-800 uppercase">Xác thực mã PIN</h3>
+                <p class="text-[10px] font-bold text-slate-400 mt-1">Vui lòng nhập mã PIN để xác nhận vị trí.</p>
+                <div class="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Vị trí phát hiện</p>
+                    <p class="text-sm font-black text-emerald-600" x-text="tempLocation"></p>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <input type="tel" x-model="pinInput" placeholder="****" maxlength="4"
+                    style="text-align:center; letter-spacing: 10px; font-size: 24px;"
+                    class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 font-black outline-none focus:border-emerald-500 focus:bg-white transition-all">
+                <button @click="verifyPin()"
+                    class="w-full py-4 rounded-2xl font-black uppercase text-xs shadow-lg bg-emerald-600 text-white active:scale-95 transition-all">
+                    Xác nhận
+                </button>
+                <button @click="showPinModal = false"
+                    class="w-full py-3 text-[10px] font-bold text-slate-400 uppercase">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Khóa phím chức năng bảo mật
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
+        };
+    </script>
+</body>
+
+</html>

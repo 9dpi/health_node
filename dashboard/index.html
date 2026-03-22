@@ -1,100 +1,263 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" x-data="{ 
+        section: 'overview', 
+        showLayer: 'arch', 
+        darkMode: localStorage.getItem('darkMode') === 'true', 
+        mobileMenu: false,
+        showModal: false, 
+        showAudit: false,
+        selectedCriteria: 'C2.1',
+        selectedIssue: null, 
+        liveKwh: 2450.8, temp: 24.2, humid: 55, aqi: 22,
+        /* --- DỮ LIỆU VỆ SINH THÔNG LUỒNG --- */
+        housekeepingLogs: [],
+        lastHkUpdate: 'Đang kết nối...',
+        pcccIssue: {
+            location: 'Hành lang khu Cấp cứu (Phía Đông)',
+            status: 'Cảnh báo: Áp suất thấp (Low Pressure)',
+            detail: 'Hệ thống phát hiện sụt giảm áp suất tại cụm vòi phun số 04. Có khả năng rò rỉ tại van chặn tầng 1.',
+            action: '1. Kiểm tra trạm bơm bù áp.\n2. Kiểm tra trực tiếp van khu vực C.\n3. Thông báo đội kỹ thuật trực ca.'
+        }
+    }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Node Admin Dashboard</title>
-    <!-- Google Fonts: Be Vietnam Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Health Node - Quản Trị Hệ Sinh Thái</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- External Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        hn: { bg: '#0f172a', card: '#1e293b', primary: '#2e7d32', secondary: '#d4e157', emerald: '#00897b' }
+                    },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards' },
+                    keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'scale(0.98)' }, '100%': { opacity: '1', transform: 'scale(1)' } } }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Stylesheets -->
     <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- External JavaScript Libraries -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="dashboard-body">
 
-    <aside class="sidebar">
-        <div class="logo" style="padding: 20px; color: var(--white); background: var(--primary-dark);">HEALTH <span>NODE</span></div>
-        <nav class="sidebar-nav">
-            <a href="#" class="active">📊 Tổng quan</a>
-            <a href="#elders">👴 Người cao tuổi</a>
-            <a href="#vitals">🩺 Chỉ số sinh tồn</a>
-            <a href="#reports">📜 Báo cáo</a>
-            <a href="../index.html" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);">🏠 Về trang chủ</a>
-        </nav>
-    </aside>
+<body :class="darkMode ? 'dark' : 'light'" x-init="
+    setInterval(() => { liveKwh = (parseFloat(liveKwh) + 0.5).toFixed(1); }, 2000);
+" class="bg-slate-50 dark:bg-slate-900 font-['Be_Vietnam_Pro']">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-white flex flex-col transition-all duration-300">
+            <div class="p-6 text-xl font-black bg-emerald-700">
+                HEALTH <span class="text-hn-secondary">NODE</span>
+            </div>
+            <nav class="flex-grow py-6">
+                <a href="#" @click.prevent="section = 'overview'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'overview' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
+                    <i class="fas fa-th-large mr-3"></i> TỔNG QUAN
+                </a>
+                <a href="#" @click.prevent="section = 'elders'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'elders' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
+                    <i class="fas fa-users mr-3"></i> NGƯỜI CAO TUỔI
+                </a>
+                <a href="#" @click.prevent="section = 'vitals'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'vitals' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
+                    <i class="fas fa-heartbeat mr-3"></i> CHỈ SỐ SINH TỒN
+                </a>
+                <a href="../index.html" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 mt-auto border-t border-white/10">
+                    <i class="fas fa-home mr-3"></i> VỀ TRANG CHỦ
+                </a>
+            </nav>
+        </aside>
 
-    <main class="main-content">
-        <header class="dash-header">
-            <div class="dash-title">
-                <h2>QUẢN LÝ ĐIỂM SỐ 01</h2>
-            </div>
-            <div class="user-profile">
-                <span>BS. Nguyễn Văn A</span>
-                <div class="avatar">👨‍⚕️</div>
-            </div>
-        </header>
-
-        <section class="stats-grid">
-            <div class="stat-card">
-                <h4>Tổng số thành viên</h4>
-                <div class="value">114</div>
-                <div class="trend up">+12% từ tháng trước</div>
-            </div>
-            <div class="stat-card">
-                <h4>Cảnh báo hôm nay</h4>
-                <div class="value danger">03</div>
-                <div class="trend">Cần hỗ trợ khẩn cấp</div>
-            </div>
-            <div class="stat-card">
-                <h4>Đã kiểm tra sức khỏe</h4>
-                <div class="value">86</div>
-                <div class="progress-bar"><div style="width: 75%;"></div></div>
-            </div>
-        </section>
-
-        <!-- Dynamic List -->
-        <section id="elders" class="data-section">
-            <div class="section-header">
-                <h3>DANH SÁCH THÀNH VIÊN</h3>
-                <button class="btn-primary" onclick="showRegisterModal()">+ Thêm thành viên mới</button>
-            </div>
-            <div class="table-container">
-                <table id="eldersTable">
-                    <thead>
-                        <tr>
-                            <th>Mã ID</th>
-                            <th>Họ Tên</th>
-                            <th>Ngày Sinh</th>
-                            <th>Trạng Thái</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="eldersList">
-                        <!-- Loaded via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Modal for Registration -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <h3>ĐĂNG KÝ THÀNH VIÊN MỚI</h3>
-            <form id="registerForm">
-                <input type="text" name="fullName" placeholder="Họ và Tên" required>
-                <input type="date" name="dob" placeholder="Ngày sinh" required>
-                <input type="text" name="cccd" placeholder="Số CCCD" required>
-                <textarea name="history" placeholder="Tiền sử bệnh, dị ứng..."></textarea>
-                <div class="modal-btns">
-                    <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Hủy</button>
-                    <button type="submit" class="btn-save">Lưu hồ sơ</button>
+        <!-- Main Content -->
+        <div class="flex-grow flex flex-col overflow-hidden">
+            <header class="bg-white dark:bg-slate-800 h-20 flex items-center justify-between px-8 shadow-sm">
+                <div>
+                    <h2 class="text-[10px] text-emerald-600 font-black uppercase tracking-widest">ĐIỂM CHĂM SÓC SỐ 01</h2>
+                    <h3 class="text-2xl font-black uppercase tracking-tight dark:text-white text-slate-800">TRUNG TÂM ĐIỀU HÀNH</h3>
                 </div>
-            </form>
+                <div class="flex items-center gap-6">
+                   <button @click="darkMode = !darkMode" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
+                       <i class="fas" :class="darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-slate-600'"></i>
+                   </button>
+                    <div class="text-right">
+                        <p class="text-[9px] opacity-50 uppercase font-black dark:text-white text-slate-900">Trạng thái hệ thống</p>
+                        <p class="text-sm font-black text-emerald-600 tracking-tighter">API ONLINE <span class="inline-block w-2 h-2 bg-emerald-500 rounded-full animate-pulse ml-1"></span></p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-grow overflow-y-auto p-8 custom-scroll">
+                
+                <!-- OVERVIEW SECTION -->
+                <div x-show="section === 'overview'" class="space-y-8 animate-fade-in">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Thế hệ thành viên</span>
+                            <div class="text-3xl font-black text-slate-800 dark:text-emerald-500 mt-1">114</div>
+                            <div class="text-[10px] font-bold text-emerald-600 mt-2 uppercase">Mục tiêu 200</div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Cảnh báo đỏ</span>
+                            <div class="text-3xl font-black text-red-600 mt-1">03</div>
+                            <div class="text-[10px] font-bold text-red-400 mt-2 uppercase">Cần hỗ trợ gấp</div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border-l-4 border-cyan-500">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Chỉ số trung bình</span>
+                            <div class="text-3xl font-black text-cyan-600 mt-1">98%</div>
+                            <div class="text-[10px] font-bold text-cyan-400 mt-2 uppercase">Ổn định</div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border-l-4 border-hn-secondary">
+                            <span class="text-[10px] font-black text-slate-400 uppercase">Dưỡng sinh hôm nay</span>
+                            <div class="text-3xl font-black text-slate-800 dark:text-white mt-1">86</div>
+                            <div class="text-[10px] font-bold text-emerald-600 mt-2 uppercase">Tại nhà văn hóa</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left: Live Activity -->
+                        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm flex flex-col">
+                            <div class="flex justify-between items-center mb-6">
+                                <h4 class="text-[12px] font-black uppercase text-emerald-700 tracking-wider">CẬP NHẬT TRỰC TIẾP</h4>
+                                <span class="bg-red-100 text-red-600 px-3 py-1 text-[9px] font-black rounded-full animate-pulse uppercase">LIVE DATA</span>
+                            </div>
+                            <div class="flex-grow space-y-4">
+                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-emerald-500/10 flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                                            <i class="fas fa-id-card"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-black dark:text-white">Nguyễn Văn Khải</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Mới đăng ký qua VNeID</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-slate-400">2 PHÚT TRƯỚC</span>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-red-500/10 flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-black dark:text-white">Bà Trần Thị B.</p>
+                                            <p class="text-[10px] text-red-500 font-bold uppercase">Cảnh báo: Huyết áp cao (165/95)</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-slate-400">10 PHÚT TRƯỚC</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Vitals Chart Sample -->
+                        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm overflow-hidden">
+                            <h4 class="text-[12px] font-black uppercase text-emerald-700 mb-6 tracking-wider">XU HƯỚNG SỨC KHỎE TỔNG THỂ</h4>
+                            <div class="h-64"><canvas id="mainChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ELDERS LIST SECTION -->
+                <div x-show="section === 'elders'" class="animate-fade-in">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="p-8 border-b dark:border-slate-700 flex justify-between items-center">
+                            <h3 class="text-xl font-black dark:text-white">DANH SÁCH THÀNH VIÊN</h3>
+                            <button @click="showModal = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-black text-sm transition-all uppercase shadow-lg shadow-emerald-600/20">+ Thêm hồ sơ mới</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-slate-50/50 dark:bg-slate-900/50 text-[10px] font-black text-slate-400 uppercase">
+                                        <th class="px-8 py-5">ID</th>
+                                        <th class="px-8 py-5">Họ & Tên</th>
+                                        <th class="px-8 py-5">Tình trạng</th>
+                                        <th class="px-8 py-5">Chỉ số cuối</th>
+                                        <th class="px-8 py-5 text-right">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm dark:text-slate-300 divide-y dark:divide-slate-700">
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+                                        <td class="px-8 py-6 font-bold text-emerald-600">HN-1002</td>
+                                        <td class="px-8 py-6 font-black uppercase">Ông Nguyễn Văn A</td>
+                                        <td class="px-8 py-6"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[9px] font-black rounded-lg uppercase">Ổn định</span></td>
+                                        <td class="px-8 py-6 font-bold">120/80 mmHg</td>
+                                        <td class="px-8 py-6 text-right"><button class="text-emerald-600 font-black hover:underline uppercase text-[10px]">Chi tiết</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm" style="display: none;">
+            <div @click.away="showModal = false" class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-10 shadow-2xl animate-fade-in">
+                <h3 class="text-2xl font-black mb-8 dark:text-white uppercase">ĐĂNG KÝ HỒ SƠ MỚI</h3>
+                <form class="space-y-4">
+                    <input type="text" placeholder="Họ và Tên" class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600">
+                    <input type="text" placeholder="Số CCCD (VNeID)" class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="date" class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600">
+                        <select class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600">
+                            <option>Nam</option>
+                            <option>Nữ</option>
+                        </select>
+                    </div>
+                    <textarea placeholder="Tiền sử bệnh án..." class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600 h-32"></textarea>
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" @click="showModal = false" class="flex-1 px-8 py-4 font-black uppercase text-slate-400 hover:text-slate-600">Hủy</button>
+                        <button type="submit" class="flex-1 bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black uppercase shadow-lg shadow-emerald-500/30">Xác nhận Lưu</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Chart.js for Vitals -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/dashboard.js"></script>
+    <!-- Charts JS for Sample -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                    datasets: [{
+                        label: 'Lượt đo sinh tồn',
+                        data: [65, 78, 90, 85, 92, 114, 105],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { display: false }, x: { grid: { display: false } } }
+                }
+            });
+        });
+    </script>
 </body>
+        </div>
+    </div>
+</body>
+
 </html>

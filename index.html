@@ -7,6 +7,8 @@
     <meta name="description" content="Hệ sinh thái y tế số chăm sóc sức khỏe người cao tuổi tại cộng đồng.">
     <!-- Google Fonts: Be Vietnam Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -21,6 +23,7 @@
                     <a href="#hero">Trang chủ</a>
                     <a href="#about">Sứ mệnh</a>
                     <a href="#services">Dịch vụ</a>
+                    <a href="#ecosystem">Công nghệ</a>
                     <a href="#use-cases">Giải pháp</a>
                 </div>
                 <div class="nav-auth">
@@ -137,6 +140,46 @@
                         <h3 style="font-size: 1.3rem; margin: 15px 0;">Kết nối trạm y tế</h3>
                         <p style="font-size: 0.85rem; color: var(--text-muted);">Dữ liệu sức khỏe hàng ngày được liên thông trực tiếp với bác sĩ tại trạm y tế xã, hỗ trợ chuyển tuyến kịp thời, chính xác.</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Digital Ecosystem Section -->
+    <section id="ecosystem" style="padding: 100px 0; background: #fdfdfd; border-top: 1px solid #f0f0f0;">
+        <div class="container">
+            <h2 style="text-transform: uppercase; font-size: 3rem; text-align: center; margin-bottom: 20px; font-weight: 900;">HỆ SINH THÁI KỸ THUẬT SỐ</h2>
+            <p style="text-align: center; color: var(--text-muted); max-width: 800px; margin: 0 auto 60px auto; font-size: 1.1rem;">Nền tảng vận hành thông minh giúp kết nối Bác sĩ, Người cao tuổi và Gia đình trong thời gian thực.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                <!-- Dashboard -->
+                <div style="background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #e0f2f1; color: #00897b; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; font-size: 2rem;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; color: #333;">DASHBOARD QUẢN TRỊ</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Trung tâm điều hành dành cho Ban quản lý, tổng hợp dữ liệu sức khỏe, theo dõi biến động và quản lý nhân sự tại điểm chăm sóc.</p>
+                    <a href="dashboard/index.html" class="btn-primary" style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px;">TRUY CẬP QUẢN TRỊ →</a>
+                </div>
+
+                <!-- Doctor App -->
+                <div style="background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #fff9c4; color: #fbc02d; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; font-size: 2rem;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; color: #333;">APP CHO BÁC SĨ</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Ứng dụng di động giúp bác sĩ quét mã định danh, xem lịch sử bệnh án và cập nhật chỉ số đo nhanh chóng ngay tại hiện trường.</p>
+                    <a href="app/mobile/bacsy.html" class="btn-primary" style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px; background: var(--black); color: #fff;">XEM GIAO DIỆN →</a>
+                </div>
+
+                <!-- Relative App -->
+                <div style="background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; text-align: center;">
+                    <div style="width: 80px; height: 80px; background: #f1f8e9; color: #689f38; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto; font-size: 2rem;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; color: #333;">APP CHO NGƯỜI NHÀ</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Người thân dễ dàng theo dõi sức khỏe của Ông Bà, nhận thông báo quan trọng và liên lạc trực tiếp với đội ngũ y tế chuyên môn.</p>
+                    <a href="app/mobile/ben_nhan.html" class="btn-primary" style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px;">DÙNG THỬ ỨNG DỤNG →</a>
                 </div>
             </div>
         </div>

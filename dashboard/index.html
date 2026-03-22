@@ -134,7 +134,7 @@
                                 <span class="bg-red-100 text-red-600 px-3 py-1 text-[9px] font-black rounded-full animate-pulse uppercase">LIVE DATA</span>
                             </div>
                             <div class="flex-grow space-y-4">
-                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-emerald-500/10 flex items-center justify-between">
+                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-emerald-500/10 flex items-center justify-between transition-all hover:scale-[1.02]">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
                                             <i class="fas fa-id-card"></i>
@@ -146,7 +146,7 @@
                                     </div>
                                     <span class="text-[9px] font-black text-slate-400">2 PHÚT TRƯỚC</span>
                                 </div>
-                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-red-500/10 flex items-center justify-between">
+                                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-red-500/10 flex items-center justify-between transition-all hover:scale-[1.02]">
                                     <div class="flex items-center gap-4">
                                         <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
                                             <i class="fas fa-exclamation-triangle"></i>
@@ -205,8 +205,8 @@
         </div>
 
         <!-- Registration Modal -->
-        <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm" style="display: none;">
-            <div @click.away="showModal = false" class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-10 shadow-2xl animate-fade-in">
+        <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm" style="display: none;" x-transition>
+            <div @click.away="showModal = false" class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-10 shadow-2xl">
                 <h3 class="text-2xl font-black mb-8 dark:text-white uppercase">ĐĂNG KÝ HỒ SƠ MỚI</h3>
                 <form class="space-y-4">
                     <input type="text" placeholder="Họ và Tên" class="w-full bg-slate-50 dark:bg-slate-900 px-6 py-4 rounded-2xl border-none font-bold outline-emerald-600">

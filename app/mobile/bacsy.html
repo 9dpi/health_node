@@ -9,15 +9,51 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        body { font-family: 'Be Vietnam Pro', sans-serif; background: #f8fafc; }
+        body { font-family: 'Be Vietnam Pro', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding-top: 40px; background: #e2e8f0; -webkit-tap-highlight-color: transparent; }
         .action-button { background: linear-gradient(135deg, #10b981 0%, #059669 100%); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .action-button:active { transform: scale(0.95); }
         .input-glow:focus { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+        
+        /* Device Frame Styles */
+        .iphone-frame {
+            position: relative;
+            width: 390px;
+            height: 844px;
+            background: #111;
+            border-radius: 60px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.3), 0 0 0 10px #222, 0 0 0 12px #444;
+            overflow: hidden;
+            border: 4px solid #333;
+        }
+        .iphone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #111;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 100;
+        }
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            background: #fafafa;
+        }
+        .iphone-screen::-webkit-scrollbar { width: 0; }
+        .fixed-nav { position: absolute !important; }
     </style>
 </head>
-<body class="pb-20">
+<body class="bg-slate-200">
+    <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen bg-slate-50 pb-20">
     <!-- Top Header -->
-    <div class="bg-slate-900 text-white p-6 rounded-b-[32px] shadow-xl">
+    <div class="bg-slate-900 text-white px-6 pb-6 pt-12 rounded-b-[32px] shadow-xl">
         <div class="flex items-center gap-4 mb-4">
             <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-xl text-emerald-400">
                 <i class="fas fa-user-md"></i>
@@ -83,10 +119,12 @@
     </div>
 
     <!-- Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t flex items-center justify-around px-2 z-50">
+    <nav class="fixed-nav bottom-0 left-0 right-0 h-16 bg-white border-t flex items-center justify-around px-2 z-50">
         <a href="#" class="text-emerald-600 text-xl"><i class="fas fa-edit"></i></a>
         <a href="#" class="text-slate-300 text-xl"><i class="fas fa-list-ul"></i></a>
         <a href="#" class="text-slate-300 text-xl"><i class="fas fa-bell"></i></a>
     </nav>
+        </div> <!-- iphone-screen -->
+    </div> <!-- iphone-frame -->
 </body>
 </html>

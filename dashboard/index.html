@@ -60,23 +60,25 @@
 " class="bg-slate-50 dark:bg-slate-900 font-['Be_Vietnam_Pro']">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 text-white flex flex-col transition-all duration-300">
-            <div class="p-6 text-xl font-black bg-emerald-700">
-                HEALTH <span class="text-hn-secondary">NODE</span>
+        <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300">
+            <div class="p-8 text-xl font-black text-emerald-800 dark:text-emerald-400">
+                HEALTH <span class="text-emerald-600">NODE</span>
             </div>
-            <nav class="flex-grow py-6">
-                <a href="#" @click.prevent="section = 'overview'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'overview' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
-                    <i class="fas fa-th-large mr-3"></i> TỔNG QUAN
+            <nav class="flex-grow py-4">
+                <a href="#" @click.prevent="section = 'overview'" class="flex items-center px-8 py-4 text-sm font-bold transition-all hover:bg-slate-50 dark:hover:bg-white/5 border-l-4" :class="section === 'overview' ? 'border-emerald-600 text-emerald-700 bg-emerald-50/30' : 'border-transparent text-slate-500'">
+                    <i class="fas fa-th-large mr-3 text-lg"></i> TỔNG QUAN
                 </a>
-                <a href="#" @click.prevent="section = 'elders'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'elders' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
-                    <i class="fas fa-users mr-3"></i> NGƯỜI CAO TUỔI
+                <a href="#" @click.prevent="section = 'elders'" class="flex items-center px-8 py-4 text-sm font-bold transition-all hover:bg-slate-50 dark:hover:bg-white/5 border-l-4" :class="section === 'elders' ? 'border-emerald-600 text-emerald-700 bg-emerald-50/30' : 'border-transparent text-slate-500'">
+                    <i class="fas fa-users mr-3 text-lg"></i> NGƯỜI CAO TUỔI
                 </a>
-                <a href="#" @click.prevent="section = 'vitals'" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 border-l-4" :class="section === 'vitals' ? 'border-hn-secondary text-hn-secondary' : 'border-transparent opacity-60'">
-                    <i class="fas fa-heartbeat mr-3"></i> CHỈ SỐ SINH TỒN
+                <a href="#" @click.prevent="section = 'vitals'" class="flex items-center px-8 py-4 text-sm font-bold transition-all hover:bg-slate-50 dark:hover:bg-white/5 border-l-4" :class="section === 'vitals' ? 'border-emerald-600 text-emerald-700 bg-emerald-50/30' : 'border-transparent text-slate-500'">
+                    <i class="fas fa-heartbeat mr-3 text-lg"></i> CHỈ SỐ SINH TỒN
                 </a>
-                <a href="../index.html" class="flex items-center px-6 py-3 text-sm font-bold transition-all hover:bg-white/5 mt-auto border-t border-white/10">
-                    <i class="fas fa-home mr-3"></i> VỀ TRANG CHỦ
-                </a>
+                <div class="mt-8 px-8 py-4 border-t border-slate-100">
+                    <a href="../index.html" class="flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors">
+                        <i class="fas fa-home mr-3"></i> VỀ TRANG CHỦ
+                    </a>
+                </div>
             </nav>
         </aside>
 

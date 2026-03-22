@@ -1,5 +1,6 @@
 :root {
     --primary: #2e7d32; /* Xanh lá cây đậm */
+    --emerald: #00897b; /* Xanh lục bảo cho Header */
     --primary-light: #4caf50; 
     --primary-dark: #1b5e20;
     --secondary: #d4e157; /* Màu vàng chanh */
@@ -41,25 +42,29 @@ h1, h2, h3 {
 
 /* Header & Nav */
 header {
-    background: var(--black);
+    background: var(--emerald);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.8rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 1.4rem;
+    font-weight: 900;
     color: var(--white);
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    flex: 1; /* Push others */
 }
 
 .logo span {
@@ -68,29 +73,38 @@ nav {
 
 .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 2.5rem;
+    flex: 2;
+    justify-content: center;
 }
 
 .nav-links a {
     text-decoration: none;
     color: var(--white);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    font-weight: 600;
-    transition: color 0.3s;
+    font-weight: 700;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
 }
 
 .nav-links a:hover {
     color: var(--secondary);
 }
 
+.nav-auth {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .btn-primary {
     background: var(--secondary);
     color: var(--black);
-    padding: 0.6rem 1.2rem;
+    padding: 0.7rem 1.5rem;
     border-radius: 4px;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     font-size: 0.8rem;
     transition: all 0.3s;
@@ -98,7 +112,6 @@ nav {
 
 .btn-primary:hover {
     background: var(--white);
-    transform: none;
 }
 
 /* Hero Section */

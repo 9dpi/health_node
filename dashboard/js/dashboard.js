@@ -14,7 +14,7 @@
                             <td class="px-8 py-6"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[9px] font-black rounded-lg uppercase">Ổn định</span></td>
                             <td class="px-8 py-6 font-bold dark:text-slate-300 text-slate-500">${elder.CCCD || elder.cccd}</td>
                             <td class="px-8 py-6 text-right">
-                                <button onclick="location.href='../app/mobile/ben_nhan.html?id=${elder.ID}'" class="text-emerald-600 font-black hover:underline uppercase text-[10px]">Chi tiết</button>
+                                <button onclick="location.href='../app/mobile/benh_nhan.html?id=${elder.ID}'" class="text-emerald-600 font-black hover:underline uppercase text-[10px]">Chi tiết</button>
                             </td>
                         </tr>
                     `).join('');

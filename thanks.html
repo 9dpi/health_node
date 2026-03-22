@@ -48,7 +48,7 @@
         document.getElementById('elderIdDisplay').innerText = elderId;
         
         // Generate QR pointing to the Mobile App dedicated to this elder
-        const mobileAppLink = window.location.origin + '/app/mobile/ben_nhan.html?id=' + elderId;
+        const mobileAppLink = window.location.origin + '/app/mobile/benh_nhan.html?id=' + elderId;
         
         new QRCode(document.getElementById("qrcode"), {
             text: mobileAppLink,

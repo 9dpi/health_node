@@ -2,8 +2,8 @@
 <html lang="vi" x-data="{ 
     role: new URLSearchParams(window.location.search).get('role') || 'relative',
     elderId: new URLSearchParams(window.location.search).get('id') || 'HN-1002',
-    elderInfo: { name: 'NGUYỄN VĂN A', age: 75, status: 'Ổn định' },
-    vitals: { bp: '120/80', glucose: '5.6', spo2: '98%', weight: '65kg' },
+    elderInfo: { name: 'TRẦN THỊ HƯƠNG', age: 78, status: 'Cần chú ý', history: 'Tiểu đường type 2, Cao huyết áp' },
+    vitals: { bp: '145/90', glucose: '7.8', spo2: '96%', weight: '58kg' },
     loading: false
 }">
 <head>
@@ -90,8 +90,8 @@
                     <div class="w-8 h-8 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-heartbeat"></i></div>
                     <span class="text-[10px] font-black text-slate-400 uppercase">Huyết áp</span>
                 </div>
-                <div class="text-xl font-black text-slate-800" x-text="vitals.bp"></div>
-                <span class="text-[9px] font-bold text-emerald-500 uppercase">Bình thường</span>
+                <div class="text-xl font-black text-red-600" x-text="vitals.bp"></div>
+                <span class="text-[9px] font-bold text-red-500 uppercase">Hơi cao</span>
             </div>
             <div class="glass-card p-5 rounded-3xl shadow-sm border border-white">
                 <div class="flex items-center gap-3 mb-3">
@@ -143,7 +143,7 @@
             <div class="bg-hn-secondary/20 p-6 rounded-[32px] border-2 border-hn-secondary/30 relative overflow-hidden">
                 <i class="fas fa-check-circle absolute -right-4 -bottom-4 text-8xl text-hn-secondary/20 scale-150 rotate-12"></i>
                 <h3 class="text-sm font-black uppercase text-emerald-800 mb-2">Thông báo từ bác sĩ</h3>
-                <p class="text-xs font-semibold text-emerald-900/70 leading-relaxed">Kết quả đo sáng nay hoàn toàn bình thường. Ông đã hoàn thành bài tập dưỡng sinh lúc 8:30.</p>
+                <p class="text-xs font-semibold text-emerald-900/70 leading-relaxed">Huyết áp của Bà hôm nay hơi cao so với hôm qua. Bác sĩ đã kê thêm liều hạ áp nhẹ. Gia đình yên tâm nhé.</p>
             </div>
         </template>
 
@@ -165,10 +165,11 @@
                 data: {
                     labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
                     datasets: [{
-                        data: [118, 122, 120, 125, 120, 121],
-                        borderColor: '#10b981',
+                        data: [135, 138, 140, 142, 148, 145],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
                         borderWidth: 4,
-                        fill: false,
+                        fill: true,
                         tension: 0.4,
                         pointRadius: 0
                     }]

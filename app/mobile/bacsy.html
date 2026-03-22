@@ -70,26 +70,52 @@
     </div>
 
     <!-- Main Content -->
-    <div class="p-6 space-y-6" x-data="{ elderId: '', step: 1 }">
+    <div class="p-6 space-y-6" x-data="{ 
+        elderId: '', step: 1,
+        mockElders: {
+            'HN-1002': { name: 'TRẦN THỊ HƯƠNG', history: 'Tiểu đường tuýp 2', alert: 'Cao huyết áp' }
+        },
+        currentElder: null,
+        scan() {
+            this.elderId = 'HN-1002';
+        },
+        confirm() {
+            if(this.elderId === 'HN-1002') {
+                this.currentElder = this.mockElders['HN-1002'];
+                this.step = 2;
+            } else {
+                alert('Không tìm thấy dữ liệu CC/ID này trên hệ thống!');
+            }
+        }
+    }">
         
         <!-- Step 1: Scan / Input ID -->
         <div x-show="step === 1" class="space-y-4">
             <h2 class="text-sm font-black text-slate-900 uppercase">1. QUÉT MÃ / NHẬP ID THÀNH VIÊN</h2>
             <div class="relative">
                 <input type="text" x-model="elderId" placeholder="Nhập ID (VD: HN-1002)..." class="w-full bg-white px-6 py-5 rounded-3xl border-none shadow-sm text-sm font-black uppercase text-emerald-800 focus:ring-2 focus:ring-emerald-500 outline-none">
-                <button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+                <button @click="scan()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
                     <i class="fas fa-qrcode"></i>
                 </button>
             </div>
-            <button @click="if(elderId) step = 2" class="w-full action-button text-white p-5 rounded-3xl font-black uppercase text-sm shadow-xl shadow-emerald-500/20">Xác nhận Thành viên</button>
+            <button @click="confirm()" class="w-full action-button text-white p-5 rounded-3xl font-black uppercase text-sm shadow-xl shadow-emerald-500/20">Xác nhận Thành viên</button>
         </div>
 
         <!-- Step 2: Vitals Input -->
         <div x-show="step === 2" class="space-y-6 animate-fade-in" style="display: none;">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-black text-slate-900 uppercase">2. GHI NHẬN CHỈ SỐ</h2>
-                <button @click="step = 1" class="text-[10px] font-black text-slate-400 uppercase">Đổi người</button>
+                <div>
+                    <h2 class="text-sm font-black text-slate-900 uppercase">2. GHI NHẬN CHỈ SỐ</h2>
+                    <p class="text-[10px] font-bold text-emerald-600 uppercase mt-1">THÀNH VIÊN: <span x-text="currentElder ? currentElder.name : ''"></span></p>
+                </div>
+                <button @click="step = 1; elderId = '';" class="text-[10px] font-black text-slate-400 uppercase">Đổi người</button>
             </div>
+
+            <template x-if="currentElder && currentElder.alert">
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <p class="text-[10px] font-black tracking-wider text-red-600 uppercase">Cảnh báo hệ thống: <span x-text="currentElder.alert"></span></p>
+                </div>
+            </template>
 
             <div class="bg-white p-6 rounded-[32px] shadow-sm space-y-6">
                 <!-- Huyết áp -->

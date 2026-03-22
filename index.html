@@ -24,6 +24,7 @@
 
 <body x-data="{ 
     showRegModal: false, 
+    showReportModal: false,
     regForm: { fullName: '', cccd: '', dob: '', history: '', relativePhone: '', address: '' },
     isSubmitting: false,
     async submitReg() {
@@ -117,7 +118,7 @@
                 </div>
             </div>
             <div style="margin-left: 80px;">
-                <a href="#" class="btn-primary" style="background: var(--black); color: #fff; padding: 1rem 2rem;">BÁO
+                <a href="javascript:void(0)" @click="showReportModal = true" class="btn-primary" style="background: var(--black); color: #fff; padding: 1rem 2rem;">BÁO
                     CÁO TOÀN CẢNH →</a>
             </div>
         </div>
@@ -194,7 +195,7 @@
                     <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Trung tâm điều hành dành
                         cho Ban quản lý, tổng hợp dữ liệu sức khỏe, theo dõi biến động và quản lý nhân sự tại điểm chăm
                         sóc.</p>
-                    <a href="dashboard/index.html" class="btn-primary"
+                    <a href="dashboard/index.html" target="_blank" class="btn-primary"
                         style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px;">TRUY CẬP
                         QUẢN TRỊ →</a>
                 </div>
@@ -211,7 +212,7 @@
                     <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Ứng dụng di động giúp bác
                         sĩ quét mã định danh, xem lịch sử bệnh án và cập nhật chỉ số đo nhanh chóng ngay tại hiện
                         trường.</p>
-                    <a href="app/mobile/bacsy.html" class="btn-primary"
+                    <a href="app/index.html?role=staff" target="_blank" class="btn-primary"
                         style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px; background: var(--black); color: #fff;">XEM
                         GIAO DIỆN →</a>
                 </div>
@@ -228,7 +229,7 @@
                     <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">Người thân dễ dàng theo
                         dõi sức khỏe của Ông Bà, nhận thông báo quan trọng và liên lạc trực tiếp với đội ngũ y tế chuyên
                         môn.</p>
-                    <a href="app/index.html?role=relative" class="btn-primary"
+                    <a href="app/index.html?role=relative" target="_blank" class="btn-primary"
                         style="display: inline-block; margin-top: 20px; font-size: 0.8rem; padding: 10px 20px;">DÙNG THỬ
                         ỨNG DỤNG →</a>
                 </div>
@@ -441,6 +442,64 @@
             </form>
         </div>
     </div>
-</body>
+    <!-- Report Modal -->
+    <div x-show="showReportModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md"
+        x-transition style="display: none;">
+        <div @click.away="showReportModal = false"
+            class="bg-white w-full max-w-4xl rounded-[40px] p-12 shadow-2xl relative overflow-y-auto max-h-[90vh]">
+            <button @click="showReportModal = false"
+                class="absolute top-8 right-8 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
 
+            <h3 style="font-size: 2rem; font-weight: 900; color: #333; margin-bottom: 40px; text-transform: uppercase;">
+                BÁO CÁO TOÀN CẢNH<br><span style="color: #00897b;">ĐỀ ÁN THÍ ĐIỂM 2026</span>
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Thành viên</div>
+                    <div class="text-3xl font-black text-emerald-700">114</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mt-1">Đã định danh VNeID</div>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Điểm thí điểm</div>
+                    <div class="text-3xl font-black text-emerald-700">01</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mt-1">Quận nội thành</div>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Kết nối hồ sơ</div>
+                    <div class="text-3xl font-black text-emerald-700">100%</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mt-1">Liên thông y tế cơ sở</div>
+                </div>
+            </div>
+
+            <div class="space-y-8 text-slate-600 leading-relaxed font-medium">
+                <section>
+                    <h4 class="text-slate-900 font-black uppercase text-sm mb-3">1. Mục đích chiến lược</h4>
+                    <p>Đề án tập trung giải quyết bài toán chăm sóc sức khỏe cho 16 triệu người cao tuổi Việt Nam thông qua mô hình xã hội hóa, tận dụng nguồn lực Nhà văn hóa cộng đồng để làm điểm sinh hoạt ban ngày kết hợp y tế số.</p>
+                </section>
+                
+                <section>
+                    <h4 class="text-slate-900 font-black uppercase text-sm mb-3">2. Hạ tầng kỹ thuật</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Hệ thống <b>Health Node Engine</b>: Xử lý dữ liệu sinh tồn thời gian thực.</li>
+                        <li>Định danh <b>VNeID</b>: Chuẩn hóa hồ sơ y tế điện tử liên thông suốt đời.</li>
+                        <li><b>Smart Devices</b>: Kết nối các thiết bị đo huyết áp, đường huyết tự động đồng bộ.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4 class="text-slate-900 font-black uppercase text-sm mb-3">3. Lộ trình mở rộng</h4>
+                    <p>Sau khi hoàn tất giai đoạn thí điểm tại 01 điểm, Đề án dự kiến mở rộng ra 10 điểm trong khu vực Quận vào cuối năm 2026, hướng tới mục tiêu phủ sóng mạng lưới trạm y tế sức khỏe cộng đồng trên toàn địa bàn Thủ đô.</p>
+                </section>
+            </div>
+
+            <div class="mt-12 flex justify-end">
+                <button @click="showReportModal = false" class="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest">Đóng báo cáo</button>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

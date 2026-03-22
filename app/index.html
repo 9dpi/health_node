@@ -18,13 +18,50 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Be Vietnam Pro', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Be Vietnam Pro', sans-serif; -webkit-tap-highlight-color: transparent; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding-top: 40px; background: #e2e8f0; }
         .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
         .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        
+        /* Device Frame Styles */
+        .iphone-frame {
+            position: relative;
+            width: 390px;
+            height: 844px;
+            background: #111;
+            border-radius: 60px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.3), 0 0 0 10px #222, 0 0 0 12px #444;
+            overflow: hidden;
+            border: 4px solid #333;
+        }
+        .iphone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #111;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 100;
+        }
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            background: #fafafa;
+        }
+        .iphone-screen::-webkit-scrollbar { width: 0; }
+        
+        /* Fixed components inside screen */
+        .fixed-nav { position: absolute !important; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-24">
-    <div class="max-w-[960px] mx-auto min-h-screen relative">
+<body class="bg-slate-200">
+    <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen bg-slate-50">
 
     <!-- Header -->
     <header class="bg-emerald-600 text-white p-6 rounded-b-[40px] shadow-lg">
@@ -113,7 +150,7 @@
     </div>
 
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-6 left-6 right-6 h-16 bg-white shadow-2xl rounded-full flex items-center justify-around px-2 z-50 glass-card safe-area-bottom">
+    <nav class="fixed-nav bottom-6 left-6 right-6 h-16 bg-white shadow-2xl rounded-full flex items-center justify-around px-2 z-50 glass-card safe-area-bottom">
         <a href="#" class="text-emerald-700 text-xl"><i class="fas fa-home"></i></a>
         <a href="#" class="text-slate-300 text-xl"><i class="fas fa-history"></i></a>
         <a href="#" class="text-slate-300 text-xl"><i class="fas fa-bell"></i></a>
@@ -144,6 +181,7 @@
             });
         });
     </script>
-    </div>
+        </div> <!-- iphone-screen -->
+    </div> <!-- iphone-frame -->
 </body>
 </html>

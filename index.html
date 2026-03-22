@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- TailwindCSS for Modal -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false }
+        }
+    </script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -56,24 +63,6 @@
         </div>
     </header>
 
-    <!-- Header Navigation -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">HEALTH <span>NODE</span></div>
-                <div class="nav-links">
-                    <a href="#hero">Trang chủ</a>
-                    <a href="#about">Sứ mệnh</a>
-                    <a href="#services">Dịch vụ</a>
-                    <a href="#ecosystem">Công nghệ</a>
-                    <a href="#use-cases">Giải pháp</a>
-                </div>
-                <div class="nav-auth">
-                    <a href="#" class="btn-primary">Đăng ký ngay</a>
-                </div>
-            </nav>
-        </div>
-    </header>
 
     <!-- Hero Section -->
     <section id="hero">

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Node Admin Dashboard</title>
+    <!-- Google Fonts: Be Vietnam Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+    <aside class="sidebar">
+        <div class="logo" style="padding: 20px; color: var(--white); background: var(--primary-dark);">HEALTH <span>NODE</span></div>
+        <nav class="sidebar-nav">
+            <a href="#" class="active">📊 Tổng quan</a>
+            <a href="#elders">👴 Người cao tuổi</a>
+            <a href="#vitals">🩺 Chỉ số sinh tồn</a>
+            <a href="#reports">📜 Báo cáo</a>
+            <a href="../index.html" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);">🏠 Về trang chủ</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="dash-header">
+            <div class="dash-title">
+                <h2>QUẢN LÝ ĐIỂM SỐ 01</h2>
+            </div>
+            <div class="user-profile">
+                <span>BS. Nguyễn Văn A</span>
+                <div class="avatar">👨‍⚕️</div>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h4>Tổng số thành viên</h4>
+                <div class="value">114</div>
+                <div class="trend up">+12% từ tháng trước</div>
+            </div>
+            <div class="stat-card">
+                <h4>Cảnh báo hôm nay</h4>
+                <div class="value danger">03</div>
+                <div class="trend">Cần hỗ trợ khẩn cấp</div>
+            </div>
+            <div class="stat-card">
+                <h4>Đã kiểm tra sức khỏe</h4>
+                <div class="value">86</div>
+                <div class="progress-bar"><div style="width: 75%;"></div></div>
+            </div>
+        </section>
+
+        <!-- Dynamic List -->
+        <section id="elders" class="data-section">
+            <div class="section-header">
+                <h3>DANH SÁCH THÀNH VIÊN</h3>
+                <button class="btn-primary" onclick="showRegisterModal()">+ Thêm thành viên mới</button>
+            </div>
+            <div class="table-container">
+                <table id="eldersTable">
+                    <thead>
+                        <tr>
+                            <th>Mã ID</th>
+                            <th>Họ Tên</th>
+                            <th>Ngày Sinh</th>
+                            <th>Trạng Thái</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eldersList">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Registration -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h3>ĐĂNG KÝ THÀNH VIÊN MỚI</h3>
+            <form id="registerForm">
+                <input type="text" name="fullName" placeholder="Họ và Tên" required>
+                <input type="date" name="dob" placeholder="Ngày sinh" required>
+                <input type="text" name="cccd" placeholder="Số CCCD" required>
+                <textarea name="history" placeholder="Tiền sử bệnh, dị ứng..."></textarea>
+                <div class="modal-btns">
+                    <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Hủy</button>
+                    <button type="submit" class="btn-save">Lưu hồ sơ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chart.js for Vitals -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -280,3 +280,95 @@ footer {
 .animate {
     animation: fadeInUp 0.8s ease-out forwards;
 }
+
+/* Mobile Responsive Overrides */
+@media screen and (max-width: 900px) {
+    #services div[style*="grid-template-columns"],
+    #ecosystem div[style*="grid-template-columns"],
+    #use-cases div[style*="grid-template-columns"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 15px 0;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .hero-content {
+        margin-top: 20px;
+    }
+    
+    .hero-content h1 {
+        font-size: 3.5rem !important;
+        padding: 5px 20px !important;
+    }
+    
+    .hero-highlight {
+        font-size: 2.2rem !important;
+        margin-top: 5px;
+    }
+    
+    .hero-boxes {
+        grid-template-columns: 1fr;
+    }
+    
+    #stats .container,
+    .footer-content {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px !important;
+    }
+    
+    #stats .container {
+        align-items: flex-start !important;
+    }
+    
+    #stats .container > div {
+        margin-left: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    #services div[style*="grid-template-columns"],
+    #ecosystem div[style*="grid-template-columns"],
+    #use-cases div[style*="grid-template-columns"] {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    #services h2,
+    #use-cases h2,
+    #ecosystem h2 {
+        font-size: 2.2rem !important;
+    }
+    
+    .box {
+        padding: 40px 20px;
+    }
+    
+    #hero {
+        padding-top: 150px;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .btn-large {
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .nav-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+}

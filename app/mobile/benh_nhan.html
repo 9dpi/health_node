@@ -1,147 +1,279 @@
 <!DOCTYPE html>
-<html lang="vi" x-data="{ 
-    role: new URLSearchParams(window.location.search).get('role') || 'relative',
-    elderId: new URLSearchParams(window.location.search).get('id') || 'HN-1002',
-    elderInfo: { name: 'NGUYỄN VĂN A', age: 75, status: 'Ổn định' },
-    vitals: { bp: '120/80', glucose: '5.6', spo2: '98%', weight: '65kg' },
-    loading: false
-}">
+<html lang="vi" x-data="{ tab: 'home', darkMode: false }" :class="{ 'dark': darkMode }">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Health Node Mobile App</title>
-    <!-- Google Fonts: Be Vietnam Pro -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- TailwindCSS -->
+    <title>SCP Patient - H? th?ng Cham s�c S?c kh?e</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { scp: { bg: '#030712', card: '#111827', primary: '#0ea5e9' } } } }
+        }
+    </script>
     <style>
-        body { font-family: 'Be Vietnam Pro', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+
+
+
+
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+
+        .app-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            z-index: 50;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .active-tab {
+            color: #0ea5e9 !important;
+        }
+
+        .patient-pulse {
+            animation: pulse-blue 2s infinite;
+        }
+
+        @keyframes pulse-blue {
+            0% {
+                box-shadow: 0 0 0 0px rgba(14, 165, 233, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(14, 165, 233, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(14, 165, 233, 0);
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-24">
 
-    <!-- Header -->
-    <header class="bg-emerald-600 text-white p-6 rounded-b-[40px] shadow-lg">
-        <div class="flex justify-between items-start mb-4">
-            <div>
-                <p class="text-[10px] font-black opacity-80 uppercase tracking-widest">Dành cho <span x-text="role === 'staff' ? 'Bác sĩ/Nhân viên' : 'Người thân'"></span></p>
-                <h1 class="text-2xl font-black uppercase" x-text="elderInfo.name"></h1>
-            </div>
-            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl">
-                <i class="fas" :class="role === 'staff' ? 'fa-user-md' : 'fa-hand-holding-heart'"></i>
-            </div>
-        </div>
-        <div class="bg-white/10 p-4 rounded-2xl flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-tight">Mã định danh: <span x-text="elderId"></span></span>
-            <span class="px-2 py-1 bg-emerald-400 text-emerald-900 text-[9px] font-black rounded-lg uppercase">ĐANG THEO DÕI</span>
-        </div>
-    </header>
+<body class="bg-slate-100" oncontextmenu="return false;">
 
-    <!-- Main Content -->
-    <div class="p-6 space-y-6">
-        
-        <!-- Vitals Grid -->
-        <div class="grid grid-cols-2 gap-4">
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-white">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-8 h-8 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-heartbeat"></i></div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase">Huyết áp</span>
+
+    <div class="app-container relative shadow-2xl overflow-hidden transition-colors duration-300"
+        :class="darkMode ? 'bg-[#030712]' : 'bg-slate-50'">
+
+        <header class="p-6 pt-10 flex justify-between items-center z-40"
+            :class="darkMode ? 'bg-[#030712]/90' : 'bg-white shadow-sm'">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-sky-500 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user-injured text-sm"></i>
                 </div>
-                <div class="text-xl font-black text-slate-800" x-text="vitals.bp"></div>
-                <span class="text-[9px] font-bold text-emerald-500 uppercase">Bình thường</span>
-            </div>
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-white">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-tint"></i></div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase">Đường huyết</span>
+                <div>
+                    <h2 class="text-[9px] opacity-50 font-bold uppercase tracking-widest"
+                        :class="darkMode ? 'text-white' : 'text-slate-900'">H? SO B?NH NH�N</h2>
+                    <h1 class="text-sm font-black tracking-tight" :class="darkMode ? 'text-white' : 'text-slate-900'">
+                        BN. NGUY?N VAN A</h1>
                 </div>
-                <div class="text-xl font-black text-slate-800" x-text="vitals.glucose"></div>
-                <span class="text-[9px] font-bold text-slate-400 uppercase">mmol/L</span>
             </div>
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-white">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-8 h-8 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-lungs"></i></div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase">SpO2</span>
+            <button onclick="alert('�ang g?i h? tr? kh?n c?p (SOS)...')"
+                class="w-10 h-10 rounded-full flex items-center justify-center bg-red-500 text-white shadow-lg patient-pulse transition-transform active:scale-90">
+                <i class="fas fa-bell text-xs"></i>
+            </button>
+        </header>
+
+        <div class="app-content p-5 space-y-6">
+
+            <div x-show="tab === 'home'" x-transition x-cloak class="space-y-6">
+                <div class="p-5 rounded-3xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[9px] opacity-70 font-bold uppercase mb-1">S? du t?m ?ng</p>
+                            <h3 class="text-2xl font-black italic">2,450,000d</h3>
+                        </div>
+                        <i class="fas fa-wallet text-3xl opacity-20"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">Ng�y nh?p vi?n</p>
+                            <p class="text-sm font-bold">25/12/2025</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] opacity-70 uppercase font-bold">Khoa dang di?u tr?</p>
+                            <p class="text-sm font-bold">N?i t?ng h?p</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-xl font-black text-slate-800" x-text="vitals.spo2"></div>
-                <span class="text-[9px] font-bold text-emerald-500 uppercase">Tốt</span>
-            </div>
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-white">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-sm"><i class="fas fa-weight"></i></div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase">Cân nặng</span>
+
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div @click="tab = 'appointment'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-900/20 text-sky-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">�?t l?ch</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-vials"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">X�t nghi?m</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">�on thu?c</span>
+                    </div>
+                    <div @click="tab = 'billing'" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <span class="text-[8px] font-bold opacity-60 uppercase dark:text-white">Vi?n ph�</span>
+                    </div>
                 </div>
-                <div class="text-xl font-black text-slate-800" x-text="vitals.weight"></div>
-                <span class="text-[9px] font-bold text-slate-400 uppercase">Cập nhật 2 ngày trước</span>
+
+                <div>
+                    <h3
+                        class="text-[10px] font-black uppercase mb-4 opacity-50 tracking-widest text-slate-900 dark:text-white">
+                        Th�ng tin t? b?nh vi?n</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-sky-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">L?ch u?ng thu?c chi?u</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-sky-100 text-sky-600 font-bold uppercase">Nh?c
+                                    nh?</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">02 vi�n Panadol sau an</p>
+                                <p class="text-[9px] font-bold text-sky-600">14:00</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-orange-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">K?t qu? Ch?n do�n h�nh ?nh</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-orange-100 text-orange-600 font-bold uppercase">M?i
+                                    c�</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">Ch?p X-Quang ph?i</p>
+                                <p class="text-[9px] font-bold text-orange-600">Xem ngay</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-xs font-bold leading-tight">L?ch h?n b�c si ng�y mai</h4>
+                                <span
+                                    class="text-[7px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-600 font-bold uppercase">��
+                                    x�c nh?n</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] opacity-50 italic">BS. Nguy?n Th? B - Ph�ng 402</p>
+                                <p class="text-[9px] font-bold text-emerald-600">08:30 AM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div x-show="tab === 'appointment'" x-transition x-cloak class="space-y-6">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">�?t l?ch kh�m</h3>
+                <div class="p-10 border-2 border-dashed rounded-3xl text-center opacity-40"
+                    :class="darkMode ? 'border-slate-800 text-white' : 'border-slate-200'">
+                    <i class="fas fa-hospital-user text-4xl mb-3 text-sky-500"></i>
+                    <p class="text-xs">Ch?n khoa v� b�c si b?n mu?n h?n l?ch</p>
+                </div>
+            </div>
+
+            <div x-show="tab === 'billing'" x-transition x-cloak class="space-y-4">
+                <h3 class="text-lg font-black text-slate-800 dark:text-white uppercase italic">Thanh to�n vi?n ph�
+                </h3>
+                <div
+                    class="p-4 rounded-2xl border bg-white dark:bg-slate-900 dark:border-slate-800 border-l-4 border-l-sky-500">
+                    <p class="text-[10px] font-bold text-sky-600 uppercase">T?m ?ng th�m</p>
+                    <p class="text-xs mt-1 font-semibold">C?n b? sung t?m ?ng cho d?t di?u tr? m?i</p>
+                    <button
+                        class="w-full mt-4 py-3 bg-sky-500 text-white rounded-xl font-black uppercase text-[10px]">Thanh
+                        to�n tr?c tuy?n</button>
+                </div>
+            </div>
+
         </div>
 
-        <!-- History Chart -->
-        <div class="bg-white p-6 rounded-[32px] shadow-sm">
-            <h3 class="text-xs font-black uppercase text-slate-400 mb-4 tracking-widest">Biểu đồ xu hướng</h3>
-            <div class="h-48">
-                <canvas id="miniChart"></canvas>
-            </div>
-        </div>
+        <nav class="bottom-nav flex justify-around items-center border-t px-4 transition-colors duration-300"
+            :class="darkMode ? 'bg-[#0b1221] border-slate-800' : 'bg-white border-slate-100'">
 
-        <!-- Role Specific Actions -->
-        <template x-if="role === 'staff'">
-            <div class="space-y-4">
-                <button class="w-full bg-slate-900 text-white p-5 rounded-3xl font-black uppercase text-sm shadow-xl shadow-slate-900/20">
-                    <i class="fas fa-plus mr-2"></i> Ghi nhận chỉ số mới
+            <button @click="tab = 'home'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'home' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Trang ch?</span>
+            </button>
+
+            <button @click="tab = 'appointment'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'appointment' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-calendar-check text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">L?ch h?n</span>
+            </button>
+
+            <div class="relative -top-6">
+                <button onclick="alert('M� QR c?a b?n d? qu�t t?i qu?y l? t�n/ph�ng kh�m...')"
+                    class="w-14 h-14 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-xl border-4 transition-transform active:scale-90"
+                    :class="darkMode ? 'border-[#030712]' : 'border-slate-50'">
+                    <i class="fas fa-qrcode text-xl"></i>
                 </button>
-                <button class="w-full bg-white text-emerald-700 border-2 border-emerald-100 p-5 rounded-3xl font-black uppercase text-sm shadow-sm">
-                    <i class="fas fa-file-prescription mr-2"></i> Kê đơn / Nhắc thuốc
-                </button>
             </div>
-        </template>
 
-        <template x-if="role === 'relative'">
-            <div class="bg-hn-secondary/20 p-6 rounded-[32px] border-2 border-hn-secondary/30 relative overflow-hidden">
-                <i class="fas fa-check-circle absolute -right-4 -bottom-4 text-8xl text-hn-secondary/20 scale-150 rotate-12"></i>
-                <h3 class="text-sm font-black uppercase text-emerald-800 mb-2">Thông báo từ bác sĩ</h3>
-                <p class="text-xs font-semibold text-emerald-900/70 leading-relaxed">Kết quả đo sáng nay hoàn toàn bình thường. Ông đã hoàn thành bài tập dưỡng sinh lúc 8:30.</p>
-            </div>
-        </template>
+            <button @click="tab = 'billing'" class="flex flex-col items-center gap-1 transition-all"
+                :class="tab === 'billing' ? 'active-tab' : 'text-slate-400'">
+                <i class="fas fa-wallet text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">Thanh to�n</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1 text-slate-400">
+                <i class="fas fa-heartbeat text-lg"></i>
+                <span class="text-[8px] font-bold uppercase">S?c kh?e</span>
+            </button>
+        </nav>
 
     </div>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-6 left-6 right-6 h-16 bg-white shadow-2xl rounded-full flex items-center justify-around px-2 z-50 glass-card safe-area-bottom">
-        <a href="#" class="text-emerald-700 text-xl"><i class="fas fa-home"></i></a>
-        <a href="#" class="text-slate-300 text-xl"><i class="fas fa-history"></i></a>
-        <a href="#" class="text-slate-300 text-xl"><i class="fas fa-bell"></i></a>
-        <a href="#" class="text-slate-300 text-xl"><i class="fas fa-cog"></i></a>
-    </nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('miniChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-                    datasets: [{
-                        data: [118, 122, 120, 125, 120, 121],
-                        borderColor: '#10b981',
-                        borderWidth: 4,
-                        fill: false,
-                        tension: 0.4,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { display: false }, x: { grid: { display: false } } }
-                }
-            });
-        });
-    </script>
 </body>
+
 </html>

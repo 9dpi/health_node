@@ -25,9 +25,7 @@
             });
             const result = await response.json();
             if (result.status === 'success') {
-                alert('Đăng ký kết nối thành công! Mã ID của bạn là: ' + result.id);
-                this.showRegModal = false;
-                this.regForm = { fullName: '', cccd: '', dob: '', history: '', relativePhone: '', address: '' };
+                window.location.href = `thanks.html?id=${result.id}&name=${encodeURIComponent(this.regForm.fullName)}`;
             }
         } catch (err) {
             alert('Có lỗi xảy ra, vui lòng thử lại sau.');

@@ -18,105 +18,154 @@
             <div class="logo">HEALTH <span>NODE</span></div>
             <div class="nav-links">
                 <a href="#hero">Trang chủ</a>
-                <a href="#about">Giới thiệu</a>
+                <a href="#about">Về chúng tôi</a>
                 <a href="#features">Dịch vụ</a>
+                <a href="#updates">Tin tức</a>
                 <a href="#contact">Liên hệ</a>
             </div>
-            <a href="#" class="btn-primary">Đăng ký tham gia</a>
+            <a href="#" class="btn-primary">Đăng ký ngay</a>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section id="hero">
-        <div class="container hero-content animate">
-            <h1>Chăm sóc sức khỏe cộng đồng cho người cao tuổi</h1>
-            <p>Kiến tạo không gian sinh hoạt ban ngày, theo dõi sức khỏe số hóa và kết nối tình thương ngay tại nhà văn hóa tổ dân phố của bạn.</p>
-            <div class="hero-btns">
-                <a href="#features" class="btn-primary">Khám phá dịch vụ</a>
-                <a href="#about" style="color: white; margin-left: 20px; font-weight: 600;">Tìm hiểu thêm →</a>
+        <div class="hero-content animate">
+            <h1>CHĂM SÓC</h1>
+            <span class="hero-highlight">VÌ CỘNG ĐỒNG</span>
+            <div class="hero-cta">
+                <a href="#" class="btn-large">Tham gia ngay</a>
+            </div>
+        </div>
+        
+        <div class="hero-boxes">
+            <div class="box">
+                <h3>SỨ MỆNH</h3>
+                <p>Nâng cao chất lượng sống cho người cao tuổi tại địa phương.</p>
+            </div>
+            <div class="box">
+                <h3>DỊCH VỤ</h3>
+                <p>Theo dõi sức khỏe định kỳ và kết nối tình thân xã hội.</p>
+            </div>
+            <div class="box">
+                <h3>LIÊN KẾT</h3>
+                <p>Gắn kết gia đình và y tế cơ sở thông qua nền tảng số.</p>
             </div>
         </div>
     </section>
 
-    <!-- Project Overview -->
-    <section id="about" style="padding: 100px 0; background: white;">
+    <!-- Mid Section - Statistics -->
+    <section id="stats" style="padding: 60px 0; background: #fff; border-bottom: 1px solid #eee;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+                <h2 style="font-size: 1.5rem; text-transform: uppercase;">Mục tiêu giai đoạn 1</h2>
+                <div style="background: #eee; height: 10px; margin: 20px 0; border-radius: 5px; position: relative;">
+                    <div style="background: var(--primary); width: 57%; height: 100%; border-radius: 5px;"></div>
+                    <span style="position: absolute; right: 43%; top: -25px; font-weight: bold; color: var(--primary);">57%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold;">
+                    <span>100 Thành viên</span>
+                    <span>Mục tiêu: 200</span>
+                </div>
+            </div>
+            <div style="margin-left: 50px;">
+                <a href="#" class="btn-primary" style="background: var(--black); color: #fff;">Xem chi tiết báo cáo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How can you help / About -->
+    <section id="about" style="padding: 100px 0; background: var(--secondary);">
         <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
-            <div class="about-text animate">
-                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Sứ mệnh của Health Node</h2>
-                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 1.1rem;">
-                    Health Node ra đời nhằm giải quyết nhu cầu chăm sóc sức khỏe thiết yếu cho hơn 16 triệu người cao tuổi tại Việt Nam. 
-                    Chúng tôi tận dụng cơ sở vật chất sẵn có tại các nhà văn hóa cộng đồng để biến chúng thành những điểm tựa sức khỏe tin cậy.
+            <div class="about-text">
+                <h2 style="font-size: 3rem; text-transform: uppercase; line-height: 1; margin-bottom: 30px;">CHÚNG TÔI LÀM GÌ?</h2>
+                <p style="margin-bottom: 30px; font-weight: 500;">
+                    Health Node không chỉ là một điểm đo huyết áp. Đó là nơi người cao tuổi tìm lại niềm vui trong cuộc sống thường nhật, 
+                    được chăm sóc bằng cả trái tim và công nghệ hiện đại nhất.
                 </p>
-                <div style="display: flex; gap: 20px;">
-                    <div>
-                        <h4 style="color: var(--primary);">Giảm tải y tế</h4>
-                        <p>Sàng lọc bệnh không lây nhiễm và sơ cứu ban đầu hiệu quả.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">🏥</span>
+                        <span style="font-weight: bold; text-transform: uppercase;">Y tế số</span>
                     </div>
-                    <div>
-                        <h4 style="color: var(--primary);">Kết nối xã hội</h4>
-                        <p>Xóa bỏ sự cô đơn và tăng cường giao lưu tinh thần cho người già.</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">👨‍👩‍👧‍👦</span>
+                        <span style="font-weight: bold; text-transform: uppercase;">Kết nối</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">🥗</span>
+                        <span style="font-weight: bold; text-transform: uppercase;">Dinh dưỡng</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">🧘‍♂️</span>
+                        <span style="font-weight: bold; text-transform: uppercase;">Dưỡng sinh</span>
                     </div>
                 </div>
             </div>
-            <div class="about-img" style="background: #e0f2f1; height: 400px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">
-                🧘‍♂️
+            <div class="about-video" style="position: relative;">
+                <img src="assets/Hieu An photo-018.jpg" alt="Hoạt động Health Node" style="width: 100%; border-radius: 4px; box-shadow: 20px 20px 0 var(--primary);">
             </div>
         </div>
     </section>
 
-    <!-- Service Features -->
-    <section id="features">
+    <!-- Recent Updates -->
+    <section id="updates" style="padding: 100px 0;">
         <div class="container section-title">
-            <h2>Dịch vụ cốt lõi</h2>
-            <p>Chúng tôi cung cấp giải pháp chăm sóc sức khỏe toàn diện cả về thể chất lẫn tinh thần.</p>
+            <h2 style="text-transform: uppercase; font-size: 2.5rem;">Cập nhật mới nhất</h2>
         </div>
         <div class="container feature-grid">
-            <div class="feature-card animate">
-                <div class="feature-icon">🏥</div>
-                <h3>Sàng lọc sức khỏe</h3>
-                <p>Theo dõi huyết áp, đường huyết, BMI định kỳ hàng tuần bằng công nghệ số.</p>
+            <div class="feature-card" style="padding: 0; text-align: left; overflow: hidden; border-radius: 4px;">
+                <img src="assets/Hieu An photo-006.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                <div style="padding: 20px;">
+                    <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">22 Tháng 3, 2026</span>
+                    <h3 style="font-size: 1.2rem; margin: 10px 0;">Khởi động thí điểm tại điểm số 01</h3>
+                    <p style="font-size: 0.9rem;">Những thành viên đầu tiên đã được trải nghiệm quy trình khám sàng lọc số hóa.</p>
+                </div>
             </div>
-            <div class="feature-card animate" style="animation-delay: 0.2s;">
-                <div class="feature-icon">⚡</div>
-                <h3>Phục hồi chức năng</h3>
-                <p>Các bài tập vật lý trị liệu, dưỡng sinh và y học cổ truyền nhẹ nhàng.</p>
+            <div class="feature-card" style="padding: 0; text-align: left; overflow: hidden; border-radius: 4px;">
+                <img src="assets/Hieu An photo-008.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                <div style="padding: 20px;">
+                    <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">15 Tháng 3, 2026</span>
+                    <h3 style="font-size: 1.2rem; margin: 10px 0;">Tập huấn kỹ năng chăm sóc</h3>
+                    <p style="font-size: 0.9rem;">Đội ngũ cộng tác viên được đào tạo bài bản về sơ cấp cứu và giao tiếp.</p>
+                </div>
             </div>
-            <div class="feature-card animate" style="animation-delay: 0.4s;">
-                <div class="feature-icon">📱</div>
-                <h3>Quản lý hồ sơ số</h3>
-                <p>Người nhà có thể theo dõi sức khỏe của ông bà qua ứng dụng di động 24/7.</p>
-            </div>
-            <div class="feature-card animate" style="animation-delay: 0.6s;">
-                <div class="feature-icon">🎭</div>
-                <h3>Sinh hoạt văn hóa</h3>
-                <p>Câu lạc bộ thơ ca, cờ tướng và giao lưu văn nghệ thường xuyên.</p>
+            <div class="feature-card" style="padding: 0; text-align: left; overflow: hidden; border-radius: 4px;">
+                <img src="assets/Hieu An photo-012.jpg" style="width: 100%; height: 200px; object-fit: cover;">
+                <div style="padding: 20px;">
+                    <span style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">10 Tháng 3, 2026</span>
+                    <h3 style="font-size: 1.2rem; margin: 10px 0;">Hợp tác cùng Trạm y tế</h3>
+                    <p style="font-size: 0.9rem;">Ký kết biên bản ghi nhớ về việc liên thông dữ liệu và hỗ trợ chuyên môn.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="container footer-content">
-            <div class="footer-info">
-                <div class="logo" style="color: white; margin-bottom: 20px;">HEALTH <span>NODE</span></div>
-                <p>Điểm chăm sóc sức khỏe và sinh hoạt ban ngày cho người cao tuổi tại Nhà văn hóa cộng đồng.</p>
+    <footer style="background: var(--black); color: #fff; padding: 80px 0 20px 0;">
+        <div class="container footer-content" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px;">
+            <div>
+                <h3 style="color: #fff; margin-bottom: 20px;">VỀ HEALTH NODE</h3>
+                <p style="opacity: 0.7; font-size: 0.9rem;">Health Node là mô hình tiên phong trong việc xã hội hóa chăm sóc sức khỏe người cao tuổi tại cộng đồng, kết hợp sức mạnh của công nghệ và tình yêu thương.</p>
             </div>
-            <div class="footer-links">
-                <h4>Liên kết</h4>
-                <ul style="list-style: none; padding-top: 10px;">
-                    <li><a href="#" style="color: rgba(255,255,255,0.7); text-decoration: none;">Đề án thí điểm</a></li>
-                    <li><a href="#" style="color: rgba(255,255,255,0.7); text-decoration: none;">Báo cáo tiến độ</a></li>
-                    <li><a href="#" style="color: rgba(255,255,255,0.7); text-decoration: none;">Hợp tác xã hội hóa</a></li>
+            <div>
+                <h3 style="color: #fff; margin-bottom: 20px;">LIÊN KẾT NHANH</h3>
+                <ul style="list-style: none; opacity: 0.7; font-size: 0.9rem;">
+                    <li style="margin-bottom: 10px;"><a href="#" style="color: #fff; text-decoration: none;">Đề án thí điểm</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#" style="color: #fff; text-decoration: none;">Hồ sơ y tế số</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#" style="color: #fff; text-decoration: none;">Tin tức hoạt động</a></li>
                 </ul>
             </div>
-            <div class="footer-contact">
-                <h4>Liên hệ dự án</h4>
-                <p style="margin-top: 10px;">Email: info@healthnode.vn</p>
-                <p>Địa chỉ: Nhà văn hóa XYZ, Quận ABC, TP. Hà Nội</p>
+            <div>
+                <h3 style="color: #fff; margin-bottom: 20px;">BÀN GIAO & LIÊN HỆ</h3>
+                <p style="opacity: 0.7; font-size: 0.9rem;">Địa chỉ: Nhà văn hóa XYZ<br>Email: contact@healthnode.vn</p>
+                <div style="margin-top: 20px;">
+                    <input type="text" placeholder="Email nhận tin" style="padding: 10px; width: 100%; border: none;">
+                    <button style="background: var(--secondary); border: none; padding: 10px; width: 100%; margin-top: 10px; font-weight: bold;">ĐĂNG KÝ</button>
+                </div>
             </div>
         </div>
-        <div class="container" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; padding-top: 20px; text-align: center; font-size: 0.9rem; opacity: 0.6;">
-            © 2026 Health Node Project. All Rights Reserved.
+        <div class="container" style="border-top: 1px solid #333; margin-top: 50px; padding-top: 20px; text-align: center; font-size: 0.8rem; opacity: 0.5;">
+            COPYRIGHT © 2026 - HEALTH NODE PROJECT
         </div>
     </footer>
 

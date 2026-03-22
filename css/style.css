@@ -1,15 +1,16 @@
 :root {
-    --primary: #00897b;
-    --primary-light: #4ebaaa;
-    --primary-dark: #005b4f;
-    --secondary: #ff7043;
-    --accent: #26a69a;
-    --bg-light: #f4f7f6;
-    --text-dark: #2c3e50;
-    --text-muted: #7f8c8d;
+    --primary: #2e7d32; /* Xanh lá cây đậm */
+    --primary-light: #4caf50; 
+    --primary-dark: #1b5e20;
+    --secondary: #d4e157; /* Màu vàng chanh */
+    --accent: #c0ca33;
+    --bg-light: #f1f8e9;
+    --text-dark: #1a237e;
+    --text-muted: #546e7a;
     --white: #ffffff;
-    --glass: rgba(255, 255, 255, 0.85);
-    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --black: #212121;
+    --glass: rgba(255, 255, 255, 0.9);
+    --shadow: 0 8px 32px 0 rgba(46, 125, 50, 0.1);
 }
 
 * {
@@ -40,29 +41,25 @@ h1, h2, h3 {
 
 /* Header & Nav */
 header {
-    background: var(--glass);
-    backdrop-filter: blur(8px);
+    background: var(--black);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    color: var(--white);
+    letter-spacing: 2px;
 }
 
 .logo span {
@@ -71,64 +68,109 @@ nav {
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-dark);
-    font-weight: 500;
+    color: var(--white);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 600;
     transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 .btn-primary {
-    background: var(--primary);
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border-radius: 50px;
+    background: var(--secondary);
+    color: var(--black);
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
     transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
+    background: var(--white);
+    transform: none;
 }
 
 /* Hero Section */
 #hero {
-    height: 100vh;
-    background: linear-gradient(rgba(0, 137, 123, 0.8), rgba(0, 137, 123, 0.4)), url('../assets/health_node_hero_bg.png');
+    height: 90vh;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../assets/Hieu An photo-004.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    text-align: center;
     color: var(--white);
-    padding-top: 80px;
 }
 
 .hero-content {
-    max-width: 700px;
+    max-width: 900px;
 }
 
 .hero-content h1 {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
     color: var(--white);
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
+    line-height: 1;
+    margin-bottom: 0px;
+    background: var(--secondary);
+    color: var(--black);
+    display: inline-block;
+    padding: 0 20px;
 }
 
-.hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    opacity: 0.9;
+.hero-highlight {
+    font-size: 4.5rem;
+    color: var(--white);
+    display: block;
+    font-weight: 800;
+    margin-top: -10px;
 }
+
+.hero-cta {
+    margin-top: 30px;
+}
+
+.btn-large {
+    background: var(--secondary);
+    color: var(--black);
+    padding: 1rem 2rem;
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* Three boxes under hero */
+.hero-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    margin-top: auto;
+}
+
+.box {
+    padding: 30px;
+    text-align: left;
+    color: var(--black);
+}
+
+.box:nth-child(1) { background: var(--secondary); }
+.box:nth-child(2) { background: #e6ee9c; }
+.box:nth-child(3) { background: var(--white); }
+
+.box h3 { color: var(--black); text-transform: uppercase; margin-bottom: 10px; }
+
 
 /* Features Section */
 #features {
